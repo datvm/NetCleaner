@@ -32,7 +32,7 @@ For example, `netclean -r "TestCleaner" -s` would search all `obj` and `bin` fol
 
 Running `netclean -r "TestCleaner" -s -d` would actually delete the folders/files.
 
-
+![Usage](./usage.png)
 
 ```ps
 -d, --Delete
