@@ -8,9 +8,13 @@ using NetCleaner.Services;
 // args = new[] { "-r", @"D:\Temp\something-not-exists" };
 
 // Test for WhatIf
-args = new[] { "-r", @"D:\Temp\TestCleaner", "-s" };
+// args = new[] { "-r", @"D:\Temp\TestCleaner", "-s" };
 
-//args = new[] { "-r", @"D:\Temp\TestCleaner", "-s", "-d" };
+// Actually delete files, be careful
+// args = new[] { "-r", @"D:\Temp\TestCleaner", "-s", "-d" };
+
+// Show help
+args = new[] { "-h" };
 
 #endif
 
