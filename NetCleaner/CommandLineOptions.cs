@@ -14,7 +14,7 @@ internal class CommandLineOptions
         set => this.FileNames = ParseList(value);
     }
 
-    [Option('e', "Extensions", HelpText = "File extensions that is required to exist in order to delete folders. NOT case-sensitive. If none is specified, files and folders will be deleted. Default: sln,csproj")]
+    [Option('e', "Extensions", HelpText = "File extensions that is required to exist in order to delete folders. NOT case-sensitive. If none is specified, files and folders will be deleted. Default: sln,csproj,wapproj")]
     public string RequiredExtsText
     {
         set => this.RequiredExts = ParseList(value);
@@ -36,7 +36,7 @@ internal class CommandLineOptions
         new(input.Split(',', StringSplitOptions.RemoveEmptyEntries), StringComparer.OrdinalIgnoreCase);
 
     internal HashSet<string> FileNames { get; set; } = new() { "bin", "obj" };
-    internal HashSet<string> RequiredExts { get; set; } = new() { "sln", "csproj" };
+    internal HashSet<string> RequiredExts { get; set; } = new() { "sln", "csproj", "wapproj" };
     internal HashSet<string> IgnoredNames { get; set; } = new();
 
 }
