@@ -14,7 +14,13 @@ using NetCleaner.Services;
 // args = new[] { "-r", @"D:\Temp\TestCleaner", "-s", "-d" };
 
 // Show help
-args = new[] { "-h" };
+// args = new[] { "-h" };
+
+// Test root folder (for inaccessible folders)
+// args = new[] { "-r", @"D:\", "-s", };
+
+// Test root folder with ignored folder (for inaccessible folders)
+// args = new[] { "-r", @"D:\", "-s", "-i", "System Volume Information" };
 
 #endif
 

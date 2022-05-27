@@ -49,51 +49,65 @@ internal class CleanerService
 
     void ScanFolder(string folder, CommandLineOptions o)
     {
-        var files = Directory.GetFiles(folder);
-        var containsExt = o.RequiredExts.Count == 0;
-
-        foreach (var file in files)
+        try
         {
-            var ext = Path.GetExtension(file);
-            if (!string.IsNullOrEmpty(ext) && 
-                o.RequiredExts.Contains(ext[1..]))
+            var folderName = Path.GetFileName(folder);
+            if (o.IgnoredNames.Contains(folderName))
             {
-                containsExt = true;
-                break;
+                WriteWarning("Skipping ignored folder: " + folder);
+                return;
             }
-        }
 
-        if (containsExt)
-        {
+            var files = Directory.GetFiles(folder);
+            var containsExt = o.RequiredExts.Count == 0;
+
             foreach (var file in files)
             {
-                var name = Path.GetFileName(file);
+                var ext = Path.GetExtension(file);
+                if (!string.IsNullOrEmpty(ext) &&
+                    o.RequiredExts.Contains(ext[1..]))
+                {
+                    containsExt = true;
+                    break;
+                }
+            }
+
+            if (containsExt)
+            {
+                foreach (var file in files)
+                {
+                    var name = Path.GetFileName(file);
+                    if (o.FileNames.Contains(name))
+                    {
+                        this.DeletingItems.Add(
+                            GetDeletingItem(file, false, o.ReportSize));
+                    }
+                }
+            }
+
+            var subFolders = Directory.GetDirectories(folder);
+            foreach (var subFolder in subFolders)
+            {
+                var name = Path.GetFileName(subFolder);
+
                 if (o.FileNames.Contains(name))
                 {
-                    this.DeletingItems.Add(
-                        GetDeletingItem(file, false, o.ReportSize));
+                    // Don't merge this if
+                    if (containsExt)
+                    {
+                        this.DeletingItems.Add(GetDeletingItem(
+                        subFolder, true, o.ReportSize));
+                    }
+                }
+                else
+                {
+                    this.ScanFolder(subFolder, o);
                 }
             }
         }
-
-        var subFolders = Directory.GetDirectories(folder);
-        foreach (var subFolder in subFolders)
+        catch (Exception ex)
         {
-            var name = Path.GetFileName(subFolder);
-
-            if (o.FileNames.Contains(name))
-            {
-                // Don't merge this if
-                if (containsExt)
-                {
-                    this.DeletingItems.Add(GetDeletingItem(
-                    subFolder, true, o.ReportSize));
-                }
-            }
-            else
-            {
-                this.ScanFolder(subFolder, o);
-            }
+            WriteWarning($"Failed to scan folder {folder}: {ex.Message}");
         }
     }
 
